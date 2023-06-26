@@ -1,23 +1,34 @@
-import React, {useContext} from 'react'
-import { AppContext } from '../context/AppContext'
+import React, { useState, useContext } from "react";
+import ViewBudget from "./viewBudget";
+import EditBudget from "./EditBudget";
+import { AppContext } from "../context/AppContext";
 
 const Budget = () => {
-  const { budget, dispatch } = useContext(AppContext)
+  const { budget, dispatch } = useContext(AppContext);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleEdit = () => {
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = (value) => {
     dispatch({
-      type: 'EDIT_BUDGET',
-      payload: budget
-    })
-  }
-  return (
-    <div className='alert alert-secondary'>
-      <span> Budget: ${budget}</span>
-      <button className='button button-primary mr-3' onClick={handleEdit}>
-        edit
-      </button>
-    </div>
-  )
-}
+      type: "SET_BUDGET",
+      payload: value,
+    });
+    setIsEditing(false);
+  };
 
-export default Budget
+  return (
+    <div class="alert alert-secondary p-3 d-flex align-items-center justify-content-between">
+      {isEditing ? (
+        <EditBudget handleSaveClick={handleSaveClick} budget={budget} />
+      ) : (
+        // For part 1 render component inline rather than create a seperate one
+        <ViewBudget handleEditClick={handleEditClick} budget={budget} />
+      )}
+    </div>
+  );
+};
+
+export default Budget;
